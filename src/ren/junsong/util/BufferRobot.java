@@ -1,6 +1,7 @@
 package ren.junsong.util;
 
 import java.awt.AWTException;
+import java.awt.Color;
 import java.awt.Robot;
 import java.awt.event.KeyEvent;
 
@@ -45,5 +46,27 @@ public class BufferRobot extends Robot {
 			bufferTime = (int) (ms * accuracy / 50 * (Math.random() - 0.5));
 		}
 		return ms + bufferTime;
+	}
+	
+	/**
+	 * 对图像颜色进行处理，在一定偏差内进行比较
+	 * x,y表示图像像素坐标
+	 * r,g,b表示颜色r,g,b值
+	 * accuracy表示误差范围
+	 */
+	public synchronized boolean getAndEqualsColor(int x,int y,int r,int g,int b,int accuracy){
+		Color color=getPixelColor(x, y);
+		if((color.getRed()<=r+accuracy)&&(color.getRed()>=r-accuracy)&&(color.getGreen()>=g-accuracy)&&(color.getGreen()<=g+accuracy)&&(color.getBlue()>=b-accuracy)&&(color.getBlue()<=b+accuracy)){
+			return true;
+		}
+		return false;
+	}
+	
+	public synchronized int[] getPixelColorValue(int x,int y){
+		int[] rgb=new int[3];
+		rgb[0]=getPixelColor(x,y).getRed();
+		rgb[1]=getPixelColor(x,y).getGreen();
+		rgb[2]=getPixelColor(x,y).getBlue();
+		return rgb;
 	}
 }
